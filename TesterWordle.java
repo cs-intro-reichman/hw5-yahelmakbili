@@ -15,19 +15,40 @@ public class TesterWordle {
             runAll();
         } else {
             switch (args[0]) {
-                case "readDictionary": testReadDictionary(); break;
-                case "chooseSecretWord": testChooseSecretWord(); break;
-                case "containsChar": testContainsChar(); break;
-                case "computeFeedback": testComputeFeedback(); break;
-                case "storeGuess": testStoreGuess(); break;
-                case "printBoard": testPrintBoard(); break;
-                case "isAllGreen": testIsAllGreen(); break;
-                
+                case "readDictionary":
+                    testReadDictionary();
+                    break;
+                case "chooseSecretWord":
+                    testChooseSecretWord();
+                    break;
+                case "containsChar":
+                    testContainsChar();
+                    break;
+                case "computeFeedback":
+                    testComputeFeedback();
+                    break;
+                case "storeGuess":
+                    testStoreGuess();
+                    break;
+                case "printBoard":
+                    testPrintBoard();
+                    break;
+                case "isAllGreen":
+                    testIsAllGreen();
+                    break;
+
                 // Robust Game Flow tests
-                case "testGameWinRobust": testGameWinRobust(); break;
-                case "testGameLoseRobust": testGameLoseRobust(); break;
-                case "testGameInvalidRobust": testGameInvalidRobust(); break;
-                default: runAll();
+                case "testGameWinRobust":
+                    testGameWinRobust();
+                    break;
+                case "testGameLoseRobust":
+                    testGameLoseRobust();
+                    break;
+                case "testGameInvalidRobust":
+                    testGameInvalidRobust();
+                    break;
+                default:
+                    runAll();
             }
         }
     }
@@ -46,19 +67,19 @@ public class TesterWordle {
 
     public static void testPrintBoard() {
         System.out.println("Testing printBoard:");
-        
+
         char[][] guesses = new char[6][5];
         char[][] results = new char[6][5];
-        
+
         // Setup dummy data for Row 0
         Wordle.storeGuess("ABCDE", guesses, 0);
-        results[0] = new char[]{'G', '_', 'Y', '_', 'G'};
-        
+        results[0] = new char[] { 'G', '_', 'Y', '_', 'G' };
+
         // Capture output
         PrintStream originalOut = System.out;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         System.setOut(new PrintStream(baos));
-        
+
         try {
             Wordle.printBoard(guesses, results, 0);
         } catch (Exception e) {
@@ -66,19 +87,21 @@ public class TesterWordle {
         } finally {
             System.setOut(originalOut);
         }
-        
+
         String output = baos.toString();
-        
+
         // Check for key components
         boolean hasGuess = output.contains("Guess 1: ABCDE");
         boolean hasResult = output.contains("Result: G_Y_G"); // Checks simplified format
-        
+
         if (hasGuess && hasResult) {
             System.out.println("Passed: Correctly printed board format (Passed)");
         } else {
             System.out.println("Failed: Output format incorrect.");
-            if (!hasGuess) System.out.println(" - Missing 'Guess 1: ABCDE'");
-            if (!hasResult) System.out.println(" - Missing 'Result: G_Y_G'");
+            if (!hasGuess)
+                System.out.println(" - Missing 'Guess 1: ABCDE'");
+            if (!hasResult)
+                System.out.println(" - Missing 'Result: G_Y_G'");
             System.out.println("Actual Output:\n" + output + "\n[End of Output]");
         }
     }
@@ -89,7 +112,7 @@ public class TesterWordle {
         try {
             Wordle.storeGuess("HELLO", guesses, 1);
             String stored = new String(guesses[1]);
-            
+
             if (stored.equals("HELLO")) {
                 System.out.println("Passed: Correctly stored guess in 2D array (Passed)");
             } else {
@@ -107,23 +130,36 @@ public class TesterWordle {
         System.out.println("Testing readDictionary:");
         try {
             String[] dict = Wordle.readDictionary("dictionary.txt");
-            if (dict == null) { System.out.println("Failed: Returned null dictionary array"); return; }
-            if (dict.length < 10) { System.out.println("Failed: Dictionary seems too small (length=" + dict.length + ")"); return; }
-            
+            if (dict == null) {
+                System.out.println("Failed: Returned null dictionary array");
+                return;
+            }
+            if (dict.length < 10) {
+                System.out.println("Failed: Dictionary seems too small (length=" + dict.length + ")");
+                return;
+            }
+
             boolean found = false;
             for (String s : dict) {
-                if ("APPLE".equals(s)) { found = true; break; }
+                if ("APPLE".equals(s)) {
+                    found = true;
+                    break;
+                }
             }
-            
-            if (found) System.out.println("Passed: Dictionary read successfully (Passed)");
-            else System.out.println("Failed: 'APPLE' not found in dictionary");
-            
-        } catch (Exception e) { System.out.println("Failed: Exception: " + e.getMessage()); }
+
+            if (found)
+                System.out.println("Passed: Dictionary read successfully (Passed)");
+            else
+                System.out.println("Failed: 'APPLE' not found in dictionary");
+
+        } catch (Exception e) {
+            System.out.println("Failed: Exception: " + e.getMessage());
+        }
     }
 
     public static void testChooseSecretWord() {
         System.out.println("Testing chooseSecretWord:");
-        String[] mockDict = {"ONE", "TWO", "THREE"};
+        String[] mockDict = { "ONE", "TWO", "THREE" };
         try {
             String secret = Wordle.chooseSecretWord(mockDict);
             if (secret != null && (secret.equals("ONE") || secret.equals("TWO") || secret.equals("THREE"))) {
@@ -131,25 +167,40 @@ public class TesterWordle {
             } else {
                 System.out.println("Failed: Returned word '" + secret + "' which was not in the provided dictionary.");
             }
-        } catch (Exception e) { System.out.println("Failed: Exception: " + e.getMessage()); }
+        } catch (Exception e) {
+            System.out.println("Failed: Exception: " + e.getMessage());
+        }
     }
 
     public static void testContainsChar() {
         System.out.println("Testing containsChar:");
         boolean failed = false;
-        
-        if (!Wordle.containsChar("HELLO", 'H')) { System.out.println("Failed: containsChar(\"HELLO\", 'H') returned false."); failed = true; }
-        if (!Wordle.containsChar("HELLO", 'O')) { System.out.println("Failed: containsChar(\"HELLO\", 'O') returned false."); failed = true; }
-        if (Wordle.containsChar("HELLO", 'A')) { System.out.println("Failed: containsChar(\"HELLO\", 'A') returned true."); failed = true; }
-        if (Wordle.containsChar("WORLD", 'X')) { System.out.println("Failed: containsChar(\"WORLD\", 'X') returned true."); failed = true; }
-        
-        if (!failed) System.out.println("Passed 4/4 tests (Passed)");
+
+        if (!Wordle.containsChar("HELLO", 'H')) {
+            System.out.println("Failed: containsChar(\"HELLO\", 'H') returned false.");
+            failed = true;
+        }
+        if (!Wordle.containsChar("HELLO", 'O')) {
+            System.out.println("Failed: containsChar(\"HELLO\", 'O') returned false.");
+            failed = true;
+        }
+        if (Wordle.containsChar("HELLO", 'A')) {
+            System.out.println("Failed: containsChar(\"HELLO\", 'A') returned true.");
+            failed = true;
+        }
+        if (Wordle.containsChar("WORLD", 'X')) {
+            System.out.println("Failed: containsChar(\"WORLD\", 'X') returned true.");
+            failed = true;
+        }
+
+        if (!failed)
+            System.out.println("Passed 4/4 tests (Passed)");
     }
 
     public static void testComputeFeedback() {
         System.out.println("Testing computeFeedback:");
         boolean failed = false;
-        
+
         // Test 1: Exact Match
         char[] res1 = new char[5];
         Wordle.computeFeedback("ABCDE", "ABCDE", res1);
@@ -183,15 +234,16 @@ public class TesterWordle {
             failed = true;
         }
 
-        if (!failed) System.out.println("Passed 3/3 tests (Passed)");
+        if (!failed)
+            System.out.println("Passed 3/3 tests (Passed)");
     }
 
     public static void testIsAllGreen() {
         System.out.println("Testing isAllGreen:");
-        char[] allG = {'G','G','G','G','G'};
-        char[] mixed = {'G','Y','G','G','G'};
+        char[] allG = { 'G', 'G', 'G', 'G', 'G' };
+        char[] mixed = { 'G', 'Y', 'G', 'G', 'G' };
         boolean failed = false;
-        
+
         if (!Wordle.isAllGreen(allG)) {
             System.out.println("Failed: isAllGreen returned false for 'GGGGG'");
             failed = true;
@@ -200,8 +252,9 @@ public class TesterWordle {
             System.out.println("Failed: isAllGreen returned true for 'GYGGG'");
             failed = true;
         }
-        
-        if (!failed) System.out.println("Passed 2/2 tests (Passed)");
+
+        if (!failed)
+            System.out.println("Passed 2/2 tests (Passed)");
     }
 
     // --- Robust Game Tests ---
@@ -213,28 +266,30 @@ public class TesterWordle {
 
         boolean passed = true;
         // Check 1
-        if (!output.contains("Guess 1: HELPS")) { 
+        if (!output.contains("Guess 1: HELPS")) {
             System.out.println("Failed: Output missing 'Guess 1: HELPS'. Did the game loop start?");
-            passed = false; 
+            passed = false;
         }
         // Check 2
-        if (!output.contains("_YYY_")) { 
-            System.out.println("Failed: Feedback for 'HELPS' incorrect. Expected '_YYY_' (or visual equivalent)."); 
-            passed = false; 
+        if (!output.contains("_YYY_")) {
+            System.out.println("Failed: Feedback for 'HELPS' incorrect. Expected '_YYY_' (or visual equivalent).");
+            passed = false;
         }
         // Check 3
-        if (!output.contains("Guess 2: APPLE")) { 
+        if (!output.contains("Guess 2: APPLE")) {
             System.out.println("Failed: Output missing 'Guess 2: APPLE'. Did the game accept the second guess?");
-            passed = false; 
+            passed = false;
         }
         // Check 4
-        if (!output.contains("Congratulations")) { 
+        if (!output.contains("Congratulations")) {
             System.out.println("Failed: Output missing 'Congratulations'. Did the game detect the win?");
-            passed = false; 
+            passed = false;
         }
 
-        if (passed) System.out.println("Passed: Game flow correct for winning scenario (Passed)");
-        else System.out.println("DEBUG: Full output was:\n" + output + "\n[End Output]");
+        if (passed)
+            System.out.println("Passed: Game flow correct for winning scenario (Passed)");
+        else
+            System.out.println("DEBUG: Full output was:\n" + output + "\n[End Output]");
     }
 
     public static void testGameLoseRobust() {
@@ -243,20 +298,21 @@ public class TesterWordle {
         String output = captureGameOutput("APPLE", input);
 
         boolean passed = true;
-        if (!output.contains("Guess 6:")) { 
-            System.out.println("Failed: Output missing 'Guess 6'. Did loop run 6 times?"); 
-            passed = false; 
+        if (!output.contains("Guess 6:")) {
+            System.out.println("Failed: Output missing 'Guess 6'. Did loop run 6 times?");
+            passed = false;
         }
-        if (!output.contains("secret word was")) { 
-            System.out.println("Failed: Did not reveal secret word after losing."); 
-            passed = false; 
+        if (!output.contains("secret word was")) {
+            System.out.println("Failed: Did not reveal secret word after losing.");
+            passed = false;
         }
-        if (output.contains("Congratulations")) { 
-            System.out.println("Failed: Printed 'Congratulations' on a losing game."); 
-            passed = false; 
+        if (output.contains("Congratulations")) {
+            System.out.println("Failed: Printed 'Congratulations' on a losing game.");
+            passed = false;
         }
 
-        if (passed) System.out.println("Passed: Game flow correct for losing scenario (Passed)");
+        if (passed)
+            System.out.println("Passed: Game flow correct for losing scenario (Passed)");
     }
 
     public static void testGameInvalidRobust() {
@@ -265,22 +321,24 @@ public class TesterWordle {
         String output = captureGameOutput("APPLE", input);
 
         boolean passed = true;
-        if (!output.contains("Invalid")) { 
-            System.out.println("Failed: Did not print 'Invalid' error message for 'ABC'"); 
-            passed = false; 
+        if (!output.contains("Invalid")) {
+            System.out.println("Failed: Did not print 'Invalid' error message for 'ABC'");
+            passed = false;
         }
-        if (output.contains("Guess 1: ABC")) { 
-            System.out.println("Failed: 'ABC' was printed as a valid guess."); 
-            passed = false; 
+        if (output.contains("Guess 1: ABC")) {
+            System.out.println("Failed: 'ABC' was printed as a valid guess.");
+            passed = false;
         }
-        if (!output.contains("Guess 1: APPLE")) { 
-            System.out.println("Failed: The valid guess 'APPLE' should be 'Guess 1', but it wasn't found or wasn't labelled 'Guess 1'."); 
-            passed = false; 
+        if (!output.contains("Guess 1: APPLE")) {
+            System.out.println(
+                    "Failed: The valid guess 'APPLE' should be 'Guess 1', but it wasn't found or wasn't labelled 'Guess 1'.");
+            passed = false;
         }
 
-        if (passed) System.out.println("Passed: Invalid input handling correct (Passed)");
+        if (passed)
+            System.out.println("Passed: Invalid input handling correct (Passed)");
     }
-    
+
     // --- Helper ---
     private static String captureGameOutput(String secret, String inputData) {
         PrintStream originalOut = System.out;
@@ -290,21 +348,31 @@ public class TesterWordle {
         File backup = new File("dictionary_backup.tmp");
         boolean backedUp = false;
         try {
-            if (original.exists()) { if (original.renameTo(backup)) backedUp = true; }
-            try (FileWriter writer = new FileWriter("dictionary.txt")) { writer.write(secret); }
+            if (original.exists()) {
+                if (original.renameTo(backup))
+                    backedUp = true;
+            }
+            try (FileWriter writer = new FileWriter("dictionary.txt")) {
+                writer.write(secret);
+            }
             System.setIn(new ByteArrayInputStream(inputData.getBytes()));
             System.setOut(newOut);
-            Wordle.main(new String[]{});
-        } catch (Exception e) { e.printStackTrace(); } 
-        finally {
+            Wordle.main(new String[] {});
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
             System.setOut(originalOut);
             File temp = new File("dictionary.txt");
-            if (temp.exists()) temp.delete();
-            if (backedUp && backup.exists()) backup.renameTo(original);
+            if (temp.exists())
+                temp.delete();
+            if (backedUp && backup.exists())
+                backup.renameTo(original);
         }
         return baos.toString();
     }
-    
+
     // Legacy test
-    public static void testGameWin() { testGameWinRobust(); }
+    public static void testGameWin() {
+        testGameWinRobust();
+    }
 }
